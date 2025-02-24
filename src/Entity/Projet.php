@@ -35,10 +35,17 @@ class Projet
     #[ORM\OneToMany(targetEntity: Statut::class, mappedBy: 'projetId')]
     private Collection $statuts;
 
+    /**
+     * @var Collection<int, Employe>
+     */
+    #[ORM\ManyToMany(targetEntity: Employe::class, inversedBy: 'projets')]
+    private Collection $employees;
+
     public function __construct()
     {
         $this->taches = new ArrayCollection();
         $this->statuts = new ArrayCollection();
+        $this->employees = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,6 +134,30 @@ class Projet
                 $statut->setProjetId(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Employe>
+     */
+    public function getEmployees(): Collection
+    {
+        return $this->employees;
+    }
+
+    public function addEmployee(Employe $employee): static
+    {
+        if (!$this->employees->contains($employee)) {
+            $this->employees->add($employee);
+        }
+
+        return $this;
+    }
+
+    public function removeEmployee(Employe $employee): static
+    {
+        $this->employees->removeElement($employee);
 
         return $this;
     }
