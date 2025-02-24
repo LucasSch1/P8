@@ -22,12 +22,12 @@
                 <img src="{{ asset('../assets/img/logo.png') }}" alt="Logo TaskLinker" />
             </a>
             <ul id="main-menu">
-                <li class="{% if app.request.get('_route') == 'app_home' %}active{% endif %}">
+                <li class="{% if app.request.get('_route') in ['app_home'] or 'projet' in app.request.get('_route') %}active{% endif %}">
                     <a href="{{ path('app_home') }}">
                         <i class="fa-solid fa-list-check"></i> Projets
                     </a>
                 </li>
-                <li class="{% if app.request.get('_route') == 'app_employes' %}active{% endif %}">
+                <li class="{% if 'employe' in app.request.get('_route') %}active{% endif %}">
                     <a href="{{ path('app_employes') }}">
                         <i class="fa-regular fa-user"></i> Équipe
                     </a>
