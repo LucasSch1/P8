@@ -29,11 +29,7 @@ class Projet
     #[ORM\OneToMany(targetEntity: Tache::class, mappedBy: 'projetId')]
     private Collection $taches;
 
-    /**
-     * @var Collection<int, Statut>
-     */
-    #[ORM\OneToMany(targetEntity: Statut::class, mappedBy: 'projetId')]
-    private Collection $statuts;
+
 
     /**
      * @var Collection<int, Employe>

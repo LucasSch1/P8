@@ -15,10 +15,6 @@ class Statut
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'statuts')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Projet $projetId = null;
-
     #[ORM\Column(length: 32)]
     private ?string $libelle = null;
 
@@ -38,17 +34,6 @@ class Statut
         return $this->id;
     }
 
-    public function getProjetId(): ?Projet
-    {
-        return $this->projetId;
-    }
-
-    public function setProjetId(?Projet $projetId): static
-    {
-        $this->projetId = $projetId;
-
-        return $this;
-    }
 
     public function getLibelle(): ?string
     {
