@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\EmployeRepository;
 use App\Repository\ProjetRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ final class HomeController extends AbstractController
 
     public function __construct(
         private ProjetRepository $projetRepository,
+        private EmployeRepository $employeRepository,
     ){}
 
 
@@ -29,8 +31,10 @@ final class HomeController extends AbstractController
     #[Route('/employes', name: 'app_employes')]
     public function showEmployesPage(): Response
     {
-        return $this->render('employes.html.twig', [
+        $employes = $this->employeRepository->findAll();
+        return $this->render('employe/employes.html.twig', [
             'controller_name' => 'HomeController',
+            'employes' => $employes,
         ]);
     }
 }
