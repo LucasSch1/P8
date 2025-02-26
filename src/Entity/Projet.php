@@ -5,43 +5,43 @@ namespace App\Entity;
 use App\Repository\ProjetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Tache;
+use App\Entity\Employe;
 
 #[ORM\Entity(repositoryClass: ProjetRepository::class)]
 class Projet
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'projet_id', type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nomProjet = null;
 
-
     #[ORM\Column]
     private ?bool $archive = null;
 
-    /**
-     * @var Collection<int, Tache>
-     */
-    #[ORM\OneToMany(targetEntity: Tache::class, mappedBy: 'projetId')]
-    private Collection $taches;
 
+
+    public function getNomProjet(): ?string{
+        return $this->nomProjet;
+    }
 
 
     /**
      * @var Collection<int, Employe>
      */
     #[ORM\ManyToMany(targetEntity: Employe::class, inversedBy: 'projets')]
-    private Collection $employees;
+    #[ORM\JoinTable(name: 'projet_employe')]
+    #[ORM\JoinColumn(name: 'projet_id', referencedColumnName: 'projet_id')]
+    #[ORM\InverseJoinColumn(name: 'employe_id', referencedColumnName: 'employe_id')]
+    private Collection $employes;
 
     public function __construct()
     {
-        $this->taches = new ArrayCollection();
-        $this->statuts = new ArrayCollection();
-        $this->employees = new ArrayCollection();
+        $this->employes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,86 +75,53 @@ class Projet
     }
 
     /**
-     * @return Collection<int, Tache>
-     */
-    public function getTaches(): Collection
-    {
-        return $this->taches;
-    }
-
-    public function addTach(Tache $tach): static
-    {
-        if (!$this->taches->contains($tach)) {
-            $this->taches->add($tach);
-            $tach->setProjetId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTach(Tache $tach): static
-    {
-        if ($this->taches->removeElement($tach)) {
-            // set the owning side to null (unless already changed)
-            if ($tach->getProjetId() === $this) {
-                $tach->setProjetId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Statut>
-     */
-    public function getStatuts(): Collection
-    {
-        return $this->statuts;
-    }
-
-    public function addStatut(Statut $statut): static
-    {
-        if (!$this->statuts->contains($statut)) {
-            $this->statuts->add($statut);
-            $statut->setProjetId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeStatut(Statut $statut): static
-    {
-        if ($this->statuts->removeElement($statut)) {
-            // set the owning side to null (unless already changed)
-            if ($statut->getProjetId() === $this) {
-                $statut->setProjetId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Employe>
      */
-    public function getEmployees(): Collection
+    public function getEmployes(): Collection
     {
-        return $this->employees;
+        return $this->employes;
     }
 
-    public function addEmployee(Employe $employee): static
+    public function addEmploye(Employe $employe): static
     {
-        if (!$this->employees->contains($employee)) {
-            $this->employees->add($employee);
+        if (!$this->employes->contains($employe)) {
+            $this->employes->add($employe);
+            $employe->addProjet($this);
         }
-
         return $this;
     }
 
-    public function removeEmployee(Employe $employee): static
+    public function removeEmploye(Employe $employe): static
     {
-        $this->employees->removeElement($employee);
-
+        if ($this->employes->removeElement($employe)) {
+            $employe->removeProjet($this);
+        }
         return $this;
     }
+
+    /**
+     * @var Collection<int, Tache>
+     */
+    #[ORM\OneToMany(targetEntity: Tache::class, mappedBy: 'projet', cascade: ['persist', 'remove'])]
+    private Collection $taches;
+
+    public function getTaches(): Collection{
+        return $this->taches;
+    }
+    public function addTache(Tache $tache): static{
+        if (!$this->taches->contains($tache)) {
+            $this->taches->add($tache);
+            $tache->setProjet($this);
+
+        }
+        return $this;
+    }
+    public function removeTache(Tache $tache): static{
+        if ($this->taches->removeElement($tache)) {
+            $tache->setProjet(null);
+
+        }
+        return $this;
+    }
+
 }
