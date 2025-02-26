@@ -15,16 +15,16 @@ class Tache
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'taches')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Projet $projetId = null;
+    #[ORM\JoinColumn(name: 'projet_id', referencedColumnName: 'projet_id',nullable: false)]
+    private ?Projet $projet = null;
 
     #[ORM\ManyToOne(inversedBy: 'taches')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Statut $statutId = null;
+    private ?Statut $statut = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Employe $employeId = null;
+    #[ORM\ManyToOne(inversedBy: 'taches')]
+    #[ORM\JoinColumn(name: 'employe_id', referencedColumnName: 'employe_id', nullable: false)]
+    private ?Employe $employe = null;
 
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
@@ -35,43 +35,48 @@ class Tache
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $deadline = null;
 
+
+
+
+
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getProjetId(): ?Projet
+    public function getProjet(): ?Projet
     {
-        return $this->projetId;
+        return $this->projet;
     }
 
-    public function setProjetId(?Projet $projetId): static
+    public function setProjet(?Projet $projet): static
     {
-        $this->projetId = $projetId;
+        $this->projet = $projet;
 
         return $this;
     }
 
-    public function getStatutId(): ?Statut
+    public function getStatut(): ?Statut
     {
-        return $this->statutId;
+        return $this->statut;
     }
 
-    public function setStatutId(?Statut $statutId): static
+    public function setStatut(?Statut $statut): static
     {
-        $this->statutId = $statutId;
+        $this->statut = $statut;
 
         return $this;
     }
 
-    public function getEmployeId(): ?Employe
+    public function getEmploye(): ?Employe
     {
-        return $this->employeId;
+        return $this->employe;
     }
 
-    public function setEmployeId(?Employe $employeId): static
+    public function setEmploye(?Employe $employe): static
     {
-        $this->employeId = $employeId;
+        $this->employe = $employe;
 
         return $this;
     }
