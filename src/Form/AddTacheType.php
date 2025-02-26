@@ -6,6 +6,7 @@ use App\Entity\Employe;
 use App\Entity\Projet;
 use App\Entity\Statut;
 use App\Entity\Tache;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,17 +22,19 @@ class AddTacheType extends AbstractType
             ->add('deadline', null, [
                 'widget' => 'single_text',
             ])
-            ->add('projetId', EntityType::class, [
-                'class' => Projet::class,
-                'choice_label' => 'id',
-            ])
-            ->add('statutId', EntityType::class, [
+//            ->add('projet', EntityType::class, [
+//                'class' => Projet::class,
+//                'choice_label' => 'id',
+//            ])
+            ->add('statut', EntityType::class, [
                 'class' => Statut::class,
-                'choice_label' => 'id',
+                'choice_label' => 'libelle',
+                'choice_value' => 'id',
             ])
-            ->add('employeId', EntityType::class, [
+            ->add('employe', EntityType::class, [
                 'class' => Employe::class,
-                'choice_label' => 'id',
+                'choice_label' => 'prenom','nom',
+                'choice_value' => 'id',
             ])
         ;
     }
