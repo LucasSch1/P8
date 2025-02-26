@@ -25,11 +25,6 @@ class Projet
 
 
 
-    public function getNomProjet(): ?string{
-        return $this->nomProjet;
-    }
-
-
     /**
      * @var Collection<int, Employe>
      */
