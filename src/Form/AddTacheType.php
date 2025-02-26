@@ -16,16 +16,13 @@ class AddTacheType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $employes = $options['employes']?? [];
         $builder
             ->add('titre')
             ->add('description')
             ->add('deadline', null, [
                 'widget' => 'single_text',
             ])
-//            ->add('projet', EntityType::class, [
-//                'class' => Projet::class,
-//                'choice_label' => 'id',
-//            ])
             ->add('statut', EntityType::class, [
                 'class' => Statut::class,
                 'choice_label' => 'libelle',
@@ -33,8 +30,11 @@ class AddTacheType extends AbstractType
             ])
             ->add('employe', EntityType::class, [
                 'class' => Employe::class,
-                'choice_label' => 'prenom','nom',
+                'choice_label' => fn(Employe $employe) => $employe->getPrenom() . ' ' . $employe->getNom(),
+                'choices' => $employes,
+                'placeholder' => ' ',
                 'choice_value' => 'id',
+                'required' => false,
             ])
         ;
     }
@@ -43,6 +43,7 @@ class AddTacheType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Tache::class,
+            'employes' => [],
         ]);
     }
 }
