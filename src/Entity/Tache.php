@@ -23,7 +23,7 @@ class Tache
     private ?Statut $statut = null;
 
     #[ORM\ManyToOne(inversedBy: 'taches')]
-    #[ORM\JoinColumn(name: 'employe_id', referencedColumnName: 'employe_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'employe_id', referencedColumnName: 'employe_id', nullable: true)]
     private ?Employe $employe = null;
 
     #[ORM\Column(length: 255)]
