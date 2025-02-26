@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Projet;
 use App\Entity\Tache;
 use App\Form\AddTacheType;
 use App\Repository\ProjetRepository;
@@ -27,7 +28,13 @@ final class TacheController extends AbstractController
     {
         $projet = $this->projetRepository->find($id);
         $tache = new Tache();
-        $formAdd = $this->createForm(AddTacheType::class, $tache);
+        $tache->setProjet($projet);
+
+        $employeProjet = $projet->getEmployes();
+
+        $formAdd = $this->createForm(AddTacheType::class, $tache, [
+            'employes' => $employeProjet,
+        ]);
         $formAdd->handleRequest($request);
         if ($formAdd->isSubmitted()){
             $error = $this->validator->validate($formAdd);
@@ -37,7 +44,7 @@ final class TacheController extends AbstractController
             {
                 $this->entityManager->persist($tache);
                 $this->entityManager->flush();
-                return $this->redirectToRoute('app_projet_view');
+                return $this->redirectToRoute('app_projet_view', ['id' => $projet->getId()]);
             }
         }
 
