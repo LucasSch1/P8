@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Repository\ProjetRepository;
 use App\Repository\StatutRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,10 +21,14 @@ final class ProjetController extends AbstractController
     {
         $projet = $this->projetRepository->find($id);
         $statuts = $this->statutRepository->findAll();
+
+        $employesProjet = $projet->getEmployes();
+
         return $this->render('projet/index.html.twig', [
             'controller_name' => 'ProjetController',
             'projet' => $projet,
             'statuts' => $statuts,
+            'employesProjet' => $employesProjet,
         ]);
     }
 
