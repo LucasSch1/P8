@@ -18,12 +18,12 @@
                 </tr>
                 </thead>
                 <tbody>
+                {% for employe in employes %}
                 <tr>
-                    {% for employe in employes %}
                     <td>
                         <div class="employee-infos">
                             <div class="employee-avatar">
-                                ND
+                                {{ employe.prenom|default('')|slice(0, 1)|upper}}{{ employe.nom|default('')|slice(0, 1)|upper}}
                             </div>
                             <div class="employee-coords">
                                 <strong>{{ employe.prenom}} {{ employe.nom}}</strong>
@@ -40,8 +40,8 @@
                             Supprimer
                         </a>
                     </td>
-                    {% endfor %}
                 </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
