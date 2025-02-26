@@ -21,7 +21,7 @@ class Statut
     /**
      * @var Collection<int, Tache>
      */
-    #[ORM\OneToMany(targetEntity: Tache::class, mappedBy: 'statutId')]
+    #[ORM\OneToMany(targetEntity: Tache::class, mappedBy: 'statut')]
     private Collection $taches;
 
     public function __construct()
@@ -59,7 +59,7 @@ class Statut
     {
         if (!$this->taches->contains($tach)) {
             $this->taches->add($tach);
-            $tach->setStatutId($this);
+            $tach->setStatut($this);
         }
 
         return $this;
@@ -69,8 +69,8 @@ class Statut
     {
         if ($this->taches->removeElement($tach)) {
             // set the owning side to null (unless already changed)
-            if ($tach->getStatutId() === $this) {
-                $tach->setStatutId(null);
+            if ($tach->getStatut() === $this) {
+                $tach->setStatut(null);
             }
         }
 
