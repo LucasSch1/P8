@@ -22,15 +22,26 @@
                 <div class="task-column">
                     <h2>{{ statut.libelle }}</h2>
                     <div class="tasks-list">
-                        <a class="task" href="tache.html">
-                            <h3>Gestion des droits d&#039;accès</h3>
-                            <p>Un employé ne peut accéder qu&#039;à ses projets</p>
-                            <div class="task-infos">
-                                <div class="task-deadline">
-                                    <i class="fa-regular fa-calendar"></i> 22/09/2023
-                                </div>
-                            </div>
-                        </a>
+                        {% set hasTasks = false %}
+                        {% for tache in projet.taches %}
+                            {% if tache.statut and tache.statut.id == statut.id %}
+                                {% set hasTasks = true %}
+                                <a class="task" href="tache.html">
+                                    <h3>{{tache.titre}}</h3>
+                                    <p>{{tache.description}}</p>
+                                    <div class="task-infos">
+                                        <div class="task-deadline">
+                                            <i class="fa-regular fa-calendar"></i> {{ tache.deadline|date('d/m/Y') }}
+                                        </div>
+                                        {% if tache.employe %}
+                                        <div class="mini-user">
+                                            {{ tache.employe.prenom|default('')|slice(0, 1)|upper}}{{ tache.employe.nom|default('')|slice(0, 1)|upper}}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
                         <a href="/projets/{{ projet.id }}/tache-add" class="task-add">
                             + Ajouter une tâche
                         </a>
