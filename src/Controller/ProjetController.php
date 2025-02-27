@@ -47,10 +47,10 @@ final class ProjetController extends AbstractController
         $projet = new Projet();
 
 
-        $employes = $this->employeRepository->findAll();
+        $allEmployes = $this->employeRepository->findAll();
 
         $formAddProjet = $this->createForm(ProjetType::class, $projet,[
-            'employes' => $employes,
+            'allEmployes' => $allEmployes,
         ]);
         $formAddProjet->handleRequest($request);
         if ($formAddProjet->isSubmitted()){
@@ -70,9 +70,44 @@ final class ProjetController extends AbstractController
             'projet' => $projet,
             'formAddProjet' => $formAddProjet->createView(),
         ]);
+    }
 
+    #[Route('/projets/{id}/projet-edit', name: 'app_projet_edit')]
+    public function editProjet(Request $request, int $id): Response
+    {
+        $projet = $this->projetRepository->find($id);
+
+        $allEmployes = $this->employeRepository->findAll();
+
+        $employesProjet = $projet->getEmployes();
+
+
+        $formAddProjet = $this->createForm(ProjetType::class, $projet,[
+            'allEmployes' => $allEmployes,
+            'employesProjet' => $employesProjet,
+        ]);
+        $formAddProjet->handleRequest($request);
+        if ($formAddProjet->isSubmitted()){
+            $errors = $this->validator->validate($formAddProjet);
+            if (count($errors) > 0) {
+                return new Response('Le formulaire n\'est pas valide', Response::HTTP_BAD_REQUEST);
+            }else
+            {
+                $this->entityManager->persist($projet);
+                $this->entityManager->flush();
+                return $this->redirectToRoute('app_projet_view', ['id' => $projet->getId()]);
+            }
+        }
+
+        return $this->render('projet/edit.html.twig', [
+            'controller_name' => 'ProjetController',
+            'projet' => $projet,
+            'formAddProjet' => $formAddProjet->createView(),
+        ]);
 
     }
+
+
 
 
 
