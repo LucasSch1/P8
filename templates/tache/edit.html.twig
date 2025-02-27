@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{tache.titre}} - TaskLinker{% endblock %}
+
+{% block body %}
+    <main>
+        <header>
+            <div id="current-user"></div>
+            <div id="title-page">
+                <h1>{{tache.titre}}</h1>
+            </div>
+        </header>
+        <div id="content">
+            {{ form_start(formEdit) }}
+            <div>
+                {{ form_row(formEdit.titre, {label:'Titre de la tâche'}) }}
+            </div>
+            <div>
+                {{ form_row(formEdit.description, {label:'Description'}) }}
+            </div>
+
+            <div class="flex-form">
+                <div>
+                    {{ form_row(formEdit.deadline, {label:'Date'}) }}
+                </div>
+                <div>
+                    {{ form_row(formEdit.statut, {label:'Statut'}) }}
+                </div>
+            </div>
+            <div>
+                {{ form_row(formEdit.employe, {label:'Membre'}) }}
+            </div>
+            <br>
+            <button class="button button-submit">Modifier</button>
+            <a href="{{ path('app_tache_delete',{'id': tache.id}) }}" class="delete-task">Supprimer la tâche</a>
+            {{ form_end(formEdit) }}
+        </div>
+    </main>
+{% endblock %}
