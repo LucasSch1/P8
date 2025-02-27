@@ -33,7 +33,7 @@ class Employe
     private ?\DateTimeInterface $dateEntree = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $actif = null;
+    private ?int $actif = 1;
 
 
 
@@ -120,7 +120,7 @@ class Employe
     /**
      * @var Collection<int, Tache>
      */
-    #[ORM\OneToMany(targetEntity: Tache::class, mappedBy: 'employe', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Tache::class, mappedBy: 'employe')]
     private Collection $taches;
     public function __construct()
     {
