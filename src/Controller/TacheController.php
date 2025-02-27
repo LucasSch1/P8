@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Projet;
 use App\Entity\Tache;
-use App\Form\AddTacheType;
+use App\Form\TacheType;
 use App\Repository\ProjetRepository;
 use App\Repository\StatutRepository;
 use App\Repository\TacheRepository;
@@ -34,7 +34,7 @@ final class TacheController extends AbstractController
 
         $employeProjet = $projet->getEmployes();
 
-        $formAdd = $this->createForm(AddTacheType::class, $tache, [
+        $formAdd = $this->createForm(TacheType::class, $tache, [
             'employes' => $employeProjet,
         ]);
         $formAdd->handleRequest($request);
@@ -61,11 +61,11 @@ final class TacheController extends AbstractController
     #[Route('/projets/{id}/tache-edit', name: 'app_tache_edit')]
     public function editTache( Tache $tache, int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $tache = $this->tacheRepository->find($id);
+        $projet = $this->tacheRepository->find($id);
         $projet = $tache->getProjet();
         $employeProjet = $projet->getEmployes();
 
-        $formEdit = $this->createForm(AddTacheType::class, $tache, [
+        $formEdit = $this->createForm(TacheType::class, $tache, [
             'employes' => $employeProjet,
         ]);
         $formEdit->handleRequest($request);
@@ -74,7 +74,7 @@ final class TacheController extends AbstractController
 
         if ($formEdit->isSubmitted() && $formEdit->isValid()) {
             $entityManager->flush();
-            return $this->redirectToRoute('app_projet_view', ['id' => $tache->getId()]);
+            return $this->redirectToRoute('app_projet_view', ['id' => $projet->getId()]);
         }
 
         return $this->render('tache/edit.html.twig', [
@@ -89,14 +89,14 @@ final class TacheController extends AbstractController
     #[Route('/projets/{id}/tache-delete', name: 'app_tache_delete')]
     public function deleteTache(Tache $tache, int $id, EntityManagerInterface $entityManager): Response
     {
-        $tache = $this->tacheRepository->find($id);
-        if(!$tache){
-            return $this->redirectToRoute('app_projet_view', ['id' => $tache->getId()]);
+        $projet = $this->tacheRepository->find($id);
+        if(!$projet){
+            return $this->redirectToRoute('app_projet_view', ['id' => $projet->getId()]);
         }
         $this->entityManager->remove($tache);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('app_projet_view', ['id' => $tache->getProjet()->getId()]);
+        return $this->redirectToRoute('app_projet_view', ['id' => $projet->getProjet()->getId()]);
 
     }
 
