@@ -26,7 +26,7 @@
                         {% for tache in projet.taches %}
                             {% if tache.statut and tache.statut.id == statut.id %}
                                 {% set hasTasks = true %}
-                                <a class="task" href="tache.html">
+                                <a class="task" href="{{ path('app_tache_edit',{'id': tache.id}) }}">
                                     <h3>{{tache.titre}}</h3>
                                     <p>{{tache.description}}</p>
                                     <div class="task-infos">
