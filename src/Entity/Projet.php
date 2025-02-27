@@ -21,7 +21,7 @@ class Projet
     private ?string $nomProjet = null;
 
     #[ORM\Column]
-    private ?bool $archive = null;
+    private ?bool $archive = false;
 
 
 
