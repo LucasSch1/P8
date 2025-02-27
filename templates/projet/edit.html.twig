@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ projet.nomProjet }} - TaskLinker{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('select[multiple]').select2();
+        });
+    </script>
+
+{% endblock %}
+{% block body %}
+    <main>
+        <header>
+            <div id="current-user"></div>
+            <div id="title-page">
+                <h1>{{ projet.nomProjet }}</h1>
+            </div>
+        </header>
+        <div id="content">
+            {{ form_start(formAddProjet) }}
+            <div>
+                {{ form_row(formAddProjet.nomProjet,{label:'Titre du projet'}) }}
+            </div>
+            <div>
+                {{ form_row(formAddProjet.employes,{label:'Inviter des membres'}) }}
+            </div>
+            <br>
+            <button class="button button-submit">Modifier</button>
+            {{ form_end(formAddProjet) }}
+        </div>
+    </main>
+
+{% endblock %}
