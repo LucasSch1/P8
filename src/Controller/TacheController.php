@@ -9,6 +9,7 @@ use App\Repository\ProjetRepository;
 use App\Repository\StatutRepository;
 use App\Repository\TacheRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,10 +26,22 @@ final class TacheController extends AbstractController
         private ValidatorInterface $validator,
     ){}
 
+    private function checkIfProjetIsArchived(?Projet $projet): ?RedirectResponse
+    {
+        if(!$projet || $projet->isArchive()){
+            $this->addFlash('error', 'Ce projet est archivé et ne peut pas être consulté.');
+            return $this->redirectToRoute('app_home');
+        }
+        return null;
+    }
+
     #[Route('/projets/{id}/tache-add', name: 'app_tache_add')]
     public function index(int $id , Request $request): Response
     {
         $projet = $this->projetRepository->find($id);
+        if ($redirect = $this->checkIfProjetIsArchived($projet)) {
+            return $redirect;
+        }
         $tache = new Tache();
         $tache->setProjet($projet);
 
@@ -62,6 +75,9 @@ final class TacheController extends AbstractController
     public function editTache( Tache $tache, int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
         $projet = $this->tacheRepository->find($id);
+        if ($redirect = $this->checkIfProjetIsArchived($projet)) {
+            return $redirect;
+        }
         $projet = $tache->getProjet();
         $employeProjet = $projet->getEmployes();
 
