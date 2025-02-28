@@ -17,11 +17,10 @@ final class HomeController extends AbstractController
         private EmployeRepository $employeRepository,
     ){}
 
-
     #[Route('/projets', name: 'app_home')]
-    public function index(): Response
+    public function projets(): Response
     {
-        $projets = $this->projetRepository->findAll();
+        $projets = $this->projetRepository->findBy(['archive'=>0]);
         return $this->render('index.html.twig', [
             'controller_name' => 'HomeController',
             'projets' => $projets,
