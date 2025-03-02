@@ -39,9 +39,6 @@ final class TacheController extends AbstractController
     public function index(int $id , Request $request): Response
     {
         $projet = $this->projetRepository->find($id);
-        if ($redirect = $this->checkIfProjetIsArchived($projet)) {
-            return $redirect;
-        }
         $tache = new Tache();
         $tache->setProjet($projet);
 
@@ -74,10 +71,6 @@ final class TacheController extends AbstractController
     #[Route('/projets/{id}/tache-edit', name: 'app_tache_edit')]
     public function editTache( Tache $tache, int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $projet = $this->tacheRepository->find($id);
-        if ($redirect = $this->checkIfProjetIsArchived($projet)) {
-            return $redirect;
-        }
         $projet = $tache->getProjet();
         $employeProjet = $projet->getEmployes();
 
@@ -106,9 +99,6 @@ final class TacheController extends AbstractController
     public function deleteTache(Tache $tache, int $id, EntityManagerInterface $entityManager): Response
     {
         $projet = $this->tacheRepository->find($id);
-        if(!$projet){
-            return $this->redirectToRoute('app_projet_view', ['id' => $projet->getId()]);
-        }
         $this->entityManager->remove($tache);
         $this->entityManager->flush();
 
