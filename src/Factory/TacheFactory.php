@@ -6,6 +6,7 @@ use App\Entity\Projet;
 use App\Entity\Statut;
 use App\Entity\Tache;
 use App\Repository\StatutRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Zenstruck\Foundry\LazyValue;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use function Zenstruck\Foundry\lazy;
@@ -16,15 +17,17 @@ use function Zenstruck\Foundry\lazy;
 final class TacheFactory extends PersistentProxyObjectFactory
 {
     private StatutRepository $statutRepository;
+    private EntityManagerInterface $entityManager;
 
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
      * @todo inject services if required
      */
-    public function __construct(StatutRepository $statutRepository)
+    public function __construct(StatutRepository $statutRepository, EntityManagerInterface $entityManager)
     {
         $this->statutRepository = $statutRepository;
+        $this->entityManager = $entityManager;
     }
 
     public static function class(): string
@@ -65,7 +68,16 @@ final class TacheFactory extends PersistentProxyObjectFactory
         $statuts = $this->statutRepository->findAll();
 
         if (empty($statuts)) {
-            throw new \Exception('Aucun statut trouvé en base de données.');
+            $defaultStatuts = ['To Do', 'Doing', 'Done'];
+
+            foreach ($defaultStatuts as $libelle) {
+                $statut = new Statut();
+                $statut->setLibelle($libelle);
+                $this->entityManager->persist($statut);
+                $statuts[] = $statut;
+            }
+
+            $this->entityManager->flush();
         }
 
         return $statuts[array_rand($statuts)];
