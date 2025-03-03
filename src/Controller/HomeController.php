@@ -17,6 +17,12 @@ final class HomeController extends AbstractController
         private EmployeRepository $employeRepository,
     ){}
 
+    #[Route('/', name: 'app_home_default')]
+    public function index(): Response
+    {
+        return $this->redirectToRoute('app_home');
+    }
+
     #[Route('/projets', name: 'app_home')]
     public function projets(): Response
     {
